@@ -22,10 +22,9 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager=getFragmentManager();
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
         fragment=new LoginFragment();
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.add(R.id.loginFragment, fragment);
         fragmentTransaction.commit();
-
-
     }
 
     @Override

@@ -51,7 +51,8 @@ public class LoginFragment extends Fragment {
                 if(result){
                     FragmentManager fragmentManager=getFragmentManager();
                     FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-                    fragment=new InsertFragment();
+                    fragment=new ListFragment();
+                    fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.replace(R.id.loginFragment, fragment);
                     fragmentTransaction.commit();
                     Toast.makeText(getActivity(), "Logged in", Toast.LENGTH_SHORT).show();

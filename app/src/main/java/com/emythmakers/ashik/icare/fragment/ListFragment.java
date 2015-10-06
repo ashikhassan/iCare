@@ -9,7 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.emythmakers.ashik.icare.R;
@@ -30,6 +32,9 @@ public class ListFragment extends Fragment {
     ArrayList<ContactModel> UserNameList;
     Fragment fragment;
     ContactModel contactModel;
+    TextView sMassage;
+    Button btnCreate;
+    boolean status;
 
 
     public ListFragment() {
@@ -42,29 +47,60 @@ public class ListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_list, container, false);
         listView=(ListView)view.findViewById(R.id.UserList);
+        sMassage=(TextView)view.findViewById(R.id.sMassage);
+        btnCreate=(Button)view.findViewById(R.id.btnInsert);
         dataSource=new DataSource(getActivity());
-        UserNameList= new ArrayList<>();
-        UserNameList=dataSource.getAllContact();
-        contactAdapter= new ContactAdapter(getActivity(),UserNameList);
-        listView.setAdapter(contactAdapter);
+        status=dataSource.CheckRow();
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        if(status) {
+            btnCreate.setVisibility(View.GONE);
+            sMassage.setVisibility(View.GONE);
+            UserNameList= new ArrayList<>();
+            UserNameList=dataSource.getAllContact();
+            contactAdapter = new ContactAdapter(getActivity(), UserNameList);
+            listView.setAdapter(contactAdapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> a, View v, int position,
+                                        long id) {
+
+                    contactModel = UserNameList.get(position);
+                    String positionID = contactModel.getId();
+                    ContactModel.setPositionID(positionID);
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragment = new userMenuFragment();
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.replace(R.id.loginFragment, fragment);
+                    fragmentTransaction.commit();
+                    Toast.makeText(getActivity(), "Details for " + positionID, Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
+        }else{
+            listView.setVisibility(View.GONE);
+            btnCreate.setVisibility(View.VISIBLE);
+            sMassage.setVisibility(View.VISIBLE);
+            sMassage.setText("No Profile Found Please create new one +");
+        }
+
+
+
+        btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> a, View v, int position,
-                                    long id) {
+            public void onClick(View v) {
 
-                contactModel=UserNameList.get(position);
-                String positionID=contactModel.getId();
-                ContactModel.setPositionID(positionID);
-                FragmentManager fragmentManager=getFragmentManager();
-                FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-                fragment=new ShowFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragment = new InsertFragment();
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.replace(R.id.loginFragment, fragment);
                 fragmentTransaction.commit();
-                Toast.makeText(getActivity(), "Details for " + positionID, Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(getActivity(), "Going to Blank from", Toast.LENGTH_SHORT).show();
             }
         });
+
         return view;
     }
 }

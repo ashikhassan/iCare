@@ -18,6 +18,7 @@ public class ContactModel {
         ContactModel.positionID = positionID;
     }
 
+
     public ContactModel(String id, String name, String age, String height, String weight) {
         this.id = id;
         setName(name);

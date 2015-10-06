@@ -68,7 +68,7 @@ public class DataSource {
     public ArrayList<String> GetAllEmployeeName(){
         ArrayList<String> arrayList=new ArrayList<>();
 
-        Cursor cursor=database.query(DatabaseHelper.TABLE_CONTACT,null,null,null,null,null,null);
+        Cursor cursor=database.query(DatabaseHelper.TABLE_CONTACT, null, null, null, null, null, null);
         if (cursor!=null && cursor.getCount()>0){
 
             cursor.moveToFirst();
@@ -114,6 +114,18 @@ public class DataSource {
 
         }
        return  contactList;
+    }
+
+
+    public Boolean CheckRow(){
+        this.open();
+        Cursor cursor=database.query(DatabaseHelper.TABLE_CONTACT,null,null,null,null,null,null);
+
+        if (cursor.getCount()==0){
+            return false;
+        }else {
+            return true;
+        }
     }
 
     public  boolean deleteData(String id){
